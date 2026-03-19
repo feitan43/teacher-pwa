@@ -29,37 +29,46 @@ function StudentModal({ student, onClose }) {
 
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
-        <div className="modal-title">
-          {isEdit ? 'Edit Student' : 'Add Student'}
-          <button onClick={onClose} style={{ color: 'var(--text2)' }}><X size={18} /></button>
+      <div className="modal" style={{ display: 'flex', flexDirection: 'column', padding: 0, maxHeight: '85dvh' }}>
+        <div style={{ overflowY: 'auto', flex: 1, padding: '24px 24px 8px', WebkitOverflowScrolling: 'touch' }}>
+          <div className="modal-title">
+            {isEdit ? 'Edit Student' : 'Add Student'}
+            <button onClick={onClose} style={{ color: 'var(--text2)' }}><X size={18} /></button>
+          </div>
+          <form id="student-form" onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div className="form-group">
+              <label className="form-label">Full name *</label>
+              <input placeholder="e.g. Juan dela Cruz" value={form.name} onChange={e => update('name', e.target.value)} required autoFocus />
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Student ID</label>
+                <input placeholder="e.g. 2024-0001" value={form.studentId} onChange={e => update('studentId', e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input type="email" placeholder="student@school.edu" value={form.email} onChange={e => update('email', e.target.value)} />
+              </div>
+            </div>
+            <div className="form-group" style={{ paddingBottom: 8 }}>
+              <label className="form-label">Class *</label>
+              <select value={form.classId} onChange={e => update('classId', e.target.value)} required>
+                <option value="">Select a class</option>
+                {classes.map(c => <option key={c.id} value={c.id}>{c.name} {c.section && `(${c.section})`}</option>)}
+              </select>
+            </div>
+          </form>
         </div>
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div className="form-group">
-            <label className="form-label">Full name *</label>
-            <input placeholder="e.g. Juan dela Cruz" value={form.name} onChange={e => update('name', e.target.value)} required autoFocus />
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Student ID</label>
-              <input placeholder="e.g. 2024-0001" value={form.studentId} onChange={e => update('studentId', e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Email</label>
-              <input type="email" placeholder="student@school.edu" value={form.email} onChange={e => update('email', e.target.value)} />
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="form-label">Class *</label>
-            <select value={form.classId} onChange={e => update('classId', e.target.value)} required>
-              <option value="">Select a class</option>
-              {classes.map(c => <option key={c.id} value={c.id}>{c.name} {c.section && `(${c.section})`}</option>)}
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary" style={{ marginTop: 6, justifyContent: 'center' }}>
+        <div style={{
+          padding: '12px 24px 24px',
+          borderTop: '1px solid var(--border)',
+          background: 'var(--surface)',
+          flexShrink: 0,
+        }}>
+          <button type="submit" form="student-form" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
             {isEdit ? 'Save changes' : 'Add student'}
           </button>
-        </form>
+        </div>
       </div>
     </div>
   )

@@ -37,70 +37,81 @@ function ClassModal({ cls, onClose }) {
 
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
-        <div className="modal-title">
-          {isEdit ? 'Edit Class' : 'New Class'}
-          <button onClick={onClose} style={{ color: 'var(--text2)' }}><X size={18} /></button>
+      <div className="modal" style={{ display: 'flex', flexDirection: 'column', padding: 0, maxHeight: '85dvh' }}>
+        {/* Scrollable form area */}
+        <div style={{ overflowY: 'auto', flex: 1, padding: '24px 24px 8px', WebkitOverflowScrolling: 'touch' }}>
+          <div className="modal-title">
+            {isEdit ? 'Edit Class' : 'New Class'}
+            <button onClick={onClose} style={{ color: 'var(--text2)' }}><X size={18} /></button>
+          </div>
+          <form id="class-form" onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div className="form-group">
+              <label className="form-label">Class name *</label>
+              <input placeholder="e.g. Mathematics 101" value={form.name} onChange={e => update('name', e.target.value)} required autoFocus />
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Section</label>
+                <input placeholder="e.g. BSIT-2A" value={form.section} onChange={e => update('section', e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Room</label>
+                <input placeholder="e.g. Room 204" value={form.room} onChange={e => update('room', e.target.value)} />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Start time</label>
+                <input type="time" value={form.timeStart} onChange={e => update('timeStart', e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">End time</label>
+                <input type="time" value={form.timeEnd} onChange={e => update('timeEnd', e.target.value)} />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Days</label>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {DAYS.map(d => (
+                  <button type="button" key={d} onClick={() => toggleDay(d)}
+                    style={{
+                      padding: '5px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+                      border: '1px solid',
+                      borderColor: form.days.includes(d) ? form.color : 'var(--border)',
+                      background: form.days.includes(d) ? `${form.color}22` : 'transparent',
+                      color: form.days.includes(d) ? form.color : 'var(--text2)',
+                      transition: 'all 0.15s',
+                    }}>{d}</button>
+                ))}
+              </div>
+            </div>
+            <div className="form-group" style={{ paddingBottom: 8 }}>
+              <label className="form-label">Color</label>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {COLORS.map(c => (
+                  <button type="button" key={c} onClick={() => update('color', c)}
+                    style={{
+                      width: 28, height: 28, borderRadius: 8, background: c,
+                      border: form.color === c ? '2px solid white' : '2px solid transparent',
+                      outline: form.color === c ? `2px solid ${c}` : 'none',
+                      transition: 'all 0.15s',
+                    }} />
+                ))}
+              </div>
+            </div>
+          </form>
         </div>
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div className="form-group">
-            <label className="form-label">Class name *</label>
-            <input placeholder="e.g. Mathematics 101" value={form.name} onChange={e => update('name', e.target.value)} required autoFocus />
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Section</label>
-              <input placeholder="e.g. BSIT-2A" value={form.section} onChange={e => update('section', e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Room</label>
-              <input placeholder="e.g. Room 204" value={form.room} onChange={e => update('room', e.target.value)} />
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Start time</label>
-              <input type="time" value={form.timeStart} onChange={e => update('timeStart', e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">End time</label>
-              <input type="time" value={form.timeEnd} onChange={e => update('timeEnd', e.target.value)} />
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="form-label">Days</label>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {DAYS.map(d => (
-                <button type="button" key={d} onClick={() => toggleDay(d)}
-                  style={{
-                    padding: '5px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-                    border: '1px solid',
-                    borderColor: form.days.includes(d) ? form.color : 'var(--border)',
-                    background: form.days.includes(d) ? `${form.color}22` : 'transparent',
-                    color: form.days.includes(d) ? form.color : 'var(--text2)',
-                    transition: 'all 0.15s',
-                  }}>{d}</button>
-              ))}
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="form-label">Color</label>
-            <div style={{ display: 'flex', gap: 8 }}>
-              {COLORS.map(c => (
-                <button type="button" key={c} onClick={() => update('color', c)}
-                  style={{
-                    width: 28, height: 28, borderRadius: 8, background: c,
-                    border: form.color === c ? '2px solid white' : '2px solid transparent',
-                    outline: form.color === c ? `2px solid ${c}` : 'none',
-                    transition: 'all 0.15s',
-                  }} />
-              ))}
-            </div>
-          </div>
-          <button type="submit" className="btn btn-primary" style={{ marginTop: 6, justifyContent: 'center' }}>
+        {/* Sticky footer — always visible */}
+        <div style={{
+          padding: '12px 24px 24px',
+          borderTop: '1px solid var(--border)',
+          background: 'var(--surface)',
+          flexShrink: 0,
+        }}>
+          <button type="submit" form="class-form" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
             {isEdit ? 'Save changes' : 'Create class'}
           </button>
-        </form>
+        </div>
       </div>
     </div>
   )
